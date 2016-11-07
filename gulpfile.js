@@ -19,7 +19,6 @@ gulp.task('eslint', function() {
     .pipe(eslint.failAfterError())
 });
 
-const filesToMove = ['htmlhint-output.html'];
 gulp.task('htmlhint', function() {
   return gulp.src(['**/*.html','!node_modules/**/*'])
   .pipe(htmlhint({htmlhintrc: '.htmlhintrc'}))
