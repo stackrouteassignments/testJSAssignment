@@ -4,6 +4,7 @@ const gulp = require('gulp');
 const eslint = require('gulp-eslint');
 const reporter = require('eslint-html-reporter');
 const htmlhint = require('gulp-htmlhint');
+const htmlhintreporter = require('gulp-htmlhint-html-reporter');
 
 const mocha = require('gulp-mocha');
 
@@ -18,12 +19,13 @@ gulp.task('eslint', function() {
     .pipe(eslint.failAfterError())
 });
 
+const filesToMove = ['htmlhint-output.html'];
 gulp.task('htmlhint', function() {
   return gulp.src(['**/*.html','!node_modules/**/*'])
   .pipe(htmlhint({htmlhintrc: '.htmlhintrc'}))
-  .pipe(htmlhint.reporter('gulp-htmlhint-html-reporter', {
+  .pipe(htmlhint.reporter(htmlhintreporter, {
      filename: __dirname + 'output/htmlhint-output.html',
-     createMissingFolders : false
+     createMissingFolders : true
    }))
   .pipe(htmlhint.failReporter())
 });

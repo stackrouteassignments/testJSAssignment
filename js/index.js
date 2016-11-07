@@ -28,6 +28,39 @@ fs.appendFileSync(outputFile_TOT,'{ \n');
 log.info('Starting...');
 log.info('Processing. Please wait...');
 const flagMF = false, flagTOT = false;
+let processLine = function(lineObj){
+  if(JSON.stringify(lineObj,null,2) !== '{}') {
+    //log.info(lineObj.CountryName);
+    switch (lineObj.IndicatorCode) {
+      case 'SP.DYN.LE00.FE.IN':
+      lineObj.IndicatorCode='F';
+      if(flagMF) {
+        fs.appendFileSync(outputFile_MF,',\n');
+      }
+      fs.appendFileSync(outputFile_MF,JSON.stringify(lineObj,null,2) + '\n');
+      flagMF = true;
+      break;
+      case 'SP.DYN.LE00.MA.IN':
+      lineObj.IndicatorCode='M';
+      if(flagMF) {
+        fs.appendFileSync(outputFile_MF,',\n');
+      }
+      fs.appendFileSync(outputFile_MF,JSON.stringify(lineObj,null,2) + '\n');
+      flagMF = true;
+      break;
+      case 'SP.DYN.LE00.IN':
+      lineObj.IndicatorCode='T';
+      if(flagTOT) {
+        fs.appendFileSync(outputFile_TOT,',\n');
+      }
+      fs.appendFileSync(outputFile_TOT,JSON.stringify(lineObj,null,2) + '\n');
+      flagTOT = true;
+      break;
+      default:
+    }
+  }
+}
+
 r1.on('line',function(line) {
   //log.info('This is a line -> ' + line);
     let lineObj={};
@@ -46,39 +79,9 @@ r1.on('line',function(line) {
         }
         delete lineObj.CountryCode;
         delete lineObj.IndicatorName;
-        if(JSON.stringify(lineObj,null,2) !== '{}') {
-            //log.info(lineObj.CountryName);
-            switch (lineObj.IndicatorCode) {
-              case 'SP.DYN.LE00.FE.IN':
-                lineObj.IndicatorCode='F';
-                if(flagMF) {
-                  fs.appendFileSync(outputFile_MF,',\n');
-                }
-                fs.appendFileSync(outputFile_MF,JSON.stringify(lineObj,null,2) + '\n');
-                flagMF = true;
-                break;
-              case 'SP.DYN.LE00.MA.IN':
-                lineObj.IndicatorCode='M';
-                if(flagMF) {
-                  fs.appendFileSync(outputFile_MF,',\n');
-                }
-                fs.appendFileSync(outputFile_MF,JSON.stringify(lineObj,null,2) + '\n');
-                flagMF = true;
-                break;
-              case 'SP.DYN.LE00.IN':
-                  lineObj.IndicatorCode='T';
-                  if(flagTOT) {
-                    fs.appendFileSync(outputFile_TOT,',\n');
-                  }
-                  fs.appendFileSync(outputFile_TOT,JSON.stringify(lineObj,null,2) + '\n');
-                  flagTOT = true;
-                  break;
-              default:
-            }
-        }
+        processLine(lineObj);
       }
 });
-
 r1.on('close',function() {
   fs.appendFile(outputFile_MF,'\n }',function(err) {
     log.info(err);
