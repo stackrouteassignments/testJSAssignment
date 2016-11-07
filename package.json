@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "node node_modules/gulp/bin/gulp.js test",
-    "lint": "node node_modules/gulp/bin/gulp.js lint"
+    "lint": "node node_modules/gulp/bin/gulp.js lint",
+    "start": "node ."
   },
   "author": "",
   "license": "ISC",
