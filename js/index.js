@@ -73,7 +73,9 @@ r1.on('line',function(line) {
     if(index===0){
         headers=newLine;
         index=index+1;
-    }else if(countries.indexOf(newLine[0].toUpperCase()) > -1 && (newLine[3] === 'SP.DYN.LE00.FE.IN' || newLine[3] === 'SP.DYN.LE00.MA.IN' || newLine[3] === 'SP.DYN.LE00.IN')){
+    }else if(countries.indexOf(newLine[0].toUpperCase()) > -1 &&
+    (newLine[3] === 'SP.DYN.LE00.FE.IN' ||
+    newLine[3] === 'SP.DYN.LE00.MA.IN' || newLine[3] === 'SP.DYN.LE00.IN')){
         for(let i=0;i<headers.length;i=i+1){
           lineObj[headers[i]]=newLine[i].replace(/'/g,'').replace('|',',');
         }
