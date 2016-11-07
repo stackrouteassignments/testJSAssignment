@@ -13,6 +13,9 @@ node {
     stage 'Linting'
     sh "npm run lint"
 
+    stage 'Link data files'
+    sh 'ln -s /datafiles .'
+
     stage 'Running Assignment'
     sh "npm start --production"
 
