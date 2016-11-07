@@ -6,7 +6,7 @@ node {
   sh "rm dist -rf"
 
   stage 'Checkout Repository'
-  git url: 'https://github.com/gSachinRep/testJSAssignment.git', branch: "${env.BRANCH_NAME}"
+  git url: 'https://github.com/stackrouteassignments/testJSAssignment.git', branch: "${env.BRANCH_NAME}"
 
   stage 'Installing Dependencies'
   sh "npm prune"
