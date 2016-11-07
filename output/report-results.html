@@ -1,0 +1,824 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ESLint Results</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style type="text/css">
+    body {
+      margin: 0;
+    }
+  
+    .eslint-report {
+      font-family: "Helvetica Neue", sans-serif;
+      font-size: 14px;
+      padding: 20px 40px;
+    }
+  
+    .eslint-report h1 {
+      border-bottom: 1px solid #ddd;
+      line-height: 1;
+      padding-bottom: 12px;
+    }
+  
+    .eslint-report h2 {
+      padding-bottom: 9px;
+      line-height: 1;
+      margin-top: 24px;
+      margin-bottom: 9px;
+    }
+  
+    .eslint-report h3 {
+      line-height: 1;
+      margin-top: 0;
+    }
+  
+    .eslint-report a {
+      text-decoration: none;
+    }
+  
+    .eslint-report table {
+      border-spacing: 0;
+      border-collapse: collapse;
+    }
+  
+    .toggle-all-link {
+      font-size: 14px;
+    }
+  
+    .report-table {
+      font-size: 14px;
+      min-width: 800px;
+      border: 1px solid #e6e6e6;
+      margin: 10px;
+    }
+  
+    .report-table thead {
+      background-color: #eee;
+    }
+  
+    .report-table th {
+      text-align: left;
+      vertical-align: middle;
+    }
+  
+    .report-table th,
+    .report-table td {
+      padding: 4px 9px;
+      border: 1px solid #ccc;
+    }
+  
+    .report-table td {
+      line-height: 1.5;
+      vertical-align: top;
+    }
+  
+    .report-table .error-col {
+      width: 41px;
+    }
+  
+    .report-table .warning-col {
+      width: 63px;
+    }
+  
+    .report-table .toggle-link {
+      display: block;
+    }
+  
+    .report-table .danger td {
+      background-color: rgba(242, 222, 222, 0.8);
+    }
+  
+    .report-table .danger:hover td {
+      background-color: rgba(242, 222, 222, 1);
+    }
+  
+    .report-table .warning td {
+      background-color: rgba(252, 248, 227, 0.8);
+    }
+  
+    .report-table .warning:hover td {
+      background-color: rgba(252, 248, 227, 1);
+    }
+  
+    .report-table .success td {
+      background-color: rgba(223, 240, 216, 0.8);
+    }
+  
+    .report-table .success:hover td {
+      background-color: rgba(223, 240, 216, 1);
+    }
+  
+    .table-wrapper {
+      display: flex;
+      justify-content: flex-start;
+      width: 600px;
+      align-items: flex-end;
+    }
+  
+    .table-wrapper.occurances {
+      align-items: flex-start;
+    }
+  
+    .table-wrapper.occurances .table-column {
+      height: 180px;
+      overflow-y: auto;
+    }
+  
+    .table-column {
+      flex: 1;
+      margin: 10px;
+    }
+  
+    .summary-table {
+      width: 100%;
+    }
+  
+    .summary-table a {
+      display: block;
+    }
+  
+    .summary-table td {
+      padding: 4px 0;
+    }
+  
+    .summary-table td:last-child {
+      text-align: right;
+    }
+  
+    .summary-table tfoot td {
+      border-top: 2px solid #666;
+      font-weight: bold;
+    }
+  
+    .details-row.hidden {
+      display: none;
+    }
+  
+    .details-table {
+      font-size: 12px;
+      width: 100%;
+      margin-bottom: 15px;
+    }
+  
+    .details-table td {
+      border: 0;
+      padding: 1px 6px;
+    }
+  
+    .details-table td:first-child {
+      padding-left: 0;
+    }
+  
+    .details-table .location-col {
+      width: 25px;
+    }
+  
+    .details-table .rule-col {
+      white-space: nowrap;
+      width: 100px;
+    }
+  
+    .details-table .rule-col a {
+      display: block;
+    }
+  
+    .details-table .rule-col a:hover {
+      text-decoration: underline;
+    }
+  
+    .details-table .severity-col {
+      width: 45px;
+    }
+  
+    .details-table .msg-danger .severity-col {
+      color: #900;
+    }
+  
+    .details-table .msg-warning .severity-col {
+      color: #f90;
+    }
+  </style>
+
+    <script>
+      // yolo
+      function toggleAllDetails(node) {
+        var rows = document.querySelectorAll("tr.details-row");
+    
+        if (node.innerHTML === "(expand all)") {
+          node.innerHTML = "(collapse all)";
+    
+          for (var x = 0; x < rows.length; x++) {
+            var row = rows[x];
+            row.className = "details-row";
+          }
+        } else {
+          node.innerHTML = "(expand all)";
+    
+          for (var x = 0; x < rows.length; x++) {
+            var row = rows[x];
+            row.className = "details-row hidden";
+          }
+        }
+      }
+    
+      function toggleDetails(node) {
+        var parentRow = node.parentNode.parentNode;
+        var detailsRow = parentRow.nextSibling;
+    
+        if (detailsRow.className === "details-row hidden") {
+          detailsRow.className = "details-row";
+        } else {
+          detailsRow.className = "details-row hidden";
+        }
+      }
+    </script>
+</head>
+<body>
+  <div class="eslint-report">
+    <h1>ESLint Results</h1>
+
+      <h2>Summary</h2>
+      
+      <div class="table-wrapper">
+        <div class="table-column">
+          <table class="summary-table">
+              <tbody>
+                <tr>
+                  <td>Errors</td>
+                  <td>2</td>
+                </tr>
+                <tr>
+                  <td>Warnings</td>
+                  <td>70</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td>Total alerts</td>
+                  <td>72</td>
+                </tr>
+              </tfoot>
+          </table>
+        </div>
+        <div class="table-column">
+          <table class="summary-table">
+              <tbody>
+                <tr>
+                  <td>Files with errors</td>
+                  <td>2</td>
+                </tr>
+                <tr>
+                  <td>Files with only warnings</td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td>Clean files</td>
+                  <td>0</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td>Total files linted</td>
+                  <td>2</td>
+                </tr>
+              </tfoot>
+          </table>
+        </div>
+      </div>
+
+        <h2>Most-Common Errors and Warnings</h2>
+        
+        <div class="table-wrapper occurances">
+          <div class="table-column">
+            <h3>Errors</h3>
+        
+              <table class="summary-table">
+                <tbody>
+                    <tr class="occurance row-0">
+                        <td><a href="http://eslint.org/docs/rules/no-unused-vars">no-unused-vars</a></td>
+                      <td>1</td>
+                    </tr>
+                    <tr class="occurance row-1">
+                        <td><a href="http://eslint.org/docs/rules/max-len">max-len</a></td>
+                      <td>1</td>
+                    </tr>
+                </tbody>
+              </table>
+          </div>
+          <div class="table-column">
+            <h3>Warnings</h3>
+        
+              <table class="summary-table">
+                <tbody>
+                    <tr class="occurance row-0">
+                        <td><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+                      <td>29</td>
+                    </tr>
+                    <tr class="occurance row-1">
+                        <td><a href="http://eslint.org/docs/rules/space-infix-ops">space-infix-ops</a></td>
+                      <td>17</td>
+                    </tr>
+                    <tr class="occurance row-2">
+                        <td><a href="http://eslint.org/docs/rules/semi">semi</a></td>
+                      <td>4</td>
+                    </tr>
+                    <tr class="occurance row-3">
+                        <td><a href="http://eslint.org/docs/rules/camelcase">camelcase</a></td>
+                      <td>4</td>
+                    </tr>
+                    <tr class="occurance row-4">
+                        <td><a href="http://eslint.org/docs/rules/space-before-blocks">space-before-blocks</a></td>
+                      <td>4</td>
+                    </tr>
+                    <tr class="occurance row-5">
+                        <td><a href="http://eslint.org/docs/rules/angular/json-functions">angular/json-functions</a></td>
+                      <td>4</td>
+                    </tr>
+                    <tr class="occurance row-6">
+                        <td><a href="http://eslint.org/docs/rules/key-spacing">key-spacing</a></td>
+                      <td>3</td>
+                    </tr>
+                    <tr class="occurance row-7">
+                        <td><a href="http://eslint.org/docs/rules/spaced-comment">spaced-comment</a></td>
+                      <td>2</td>
+                    </tr>
+                    <tr class="occurance row-8">
+                        <td><a href="http://eslint.org/docs/rules/semi-spacing">semi-spacing</a></td>
+                      <td>2</td>
+                    </tr>
+                    <tr class="occurance row-9">
+                        <td><a href="http://eslint.org/docs/rules/one-var">one-var</a></td>
+                      <td>1</td>
+                    </tr>
+                </tbody>
+              </table>
+          </div>
+        </div>
+
+      <h2>File Breakdown
+          <a id="toggle" href="javascript:;" onclick="toggleAllDetails(this)" class="toggle-all-link">(expand all)</a></h2>
+      
+      <table class="report-table">
+        <thead>
+          <tr>
+            <th>File</th>
+            <th class="error-col">Errors</th>
+            <th class="warning-col">Warnings</th>
+          </tr>
+        </thead>
+        <tbody><tr class="danger"><td>            <a class="toggle-link" href="javascript:;" onclick="toggleDetails(this)">/vagrant/org-testJSAssignments/js/index.js</a></td>
+              <td>1</td>
+              <td>61</td></tr><tr class="details-row hidden">
+                <td colspan="3">
+                  <table class="details-table">
+                    <tbody><tr class="msg-warning"><td class="location-col">
+                              6:7
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Identifier &#x27;outputFile_MF&#x27; is not in camel case.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/camelcase">camelcase</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              7:7
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Identifier &#x27;outputFile_TOT&#x27; is not in camel case.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/camelcase">camelcase</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              9:3
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Extra space after key &#x27;input&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/key-spacing">key-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              10:3
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Extra space after key &#x27;terminal&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/key-spacing">key-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              12:14
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Infix operators must be spaced.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/space-infix-ops">space-infix-ops</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              13:12
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Infix operators must be spaced.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/space-infix-ops">space-infix-ops</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              14:14
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Infix operators must be spaced.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/space-infix-ops">space-infix-ops</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              19:12
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Identifier &#x27;outputFile_MF&#x27; is not in camel case.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/camelcase">camelcase</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              23:12
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Identifier &#x27;outputFile_TOT&#x27; is not in camel case.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/camelcase">camelcase</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              26:32
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              27:33
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              30:1
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Split &#x27;const&#x27; declarations into multiple statements.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/one-var">one-var</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              31:36
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Missing space before opening brace.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/space-before-blocks">space-before-blocks</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              32:6
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">You should use the angular.toJson method instead of JSON.stringify</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/angular/json-functions">angular/json-functions</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              32:28
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              32:33
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              33:5
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Expected space or tab after &#x27;//&#x27; in comment.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/spaced-comment">spaced-comment</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              36:28
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Infix operators must be spaced.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/space-infix-ops">space-infix-ops</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              38:40
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              40:38
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              40:39
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">You should use the angular.toJson method instead of JSON.stringify</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/angular/json-functions">angular/json-functions</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              40:61
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              40:66
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              44:28
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Infix operators must be spaced.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/space-infix-ops">space-infix-ops</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              46:40
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              48:38
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              48:39
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">You should use the angular.toJson method instead of JSON.stringify</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/angular/json-functions">angular/json-functions</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              48:61
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              48:66
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              52:28
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Infix operators must be spaced.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/space-infix-ops">space-infix-ops</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              54:41
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              56:39
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              56:40
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">You should use the angular.toJson method instead of JSON.stringify</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/angular/json-functions">angular/json-functions</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              56:62
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              56:67
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              62:2
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Missing semicolon.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/semi">semi</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              64:13
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              65:3
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Expected space or tab after &#x27;//&#x27; in comment.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/spaced-comment">spaced-comment</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              66:16
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Infix operators must be spaced.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/space-infix-ops">space-infix-ops</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              71:12
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Infix operators must be spaced.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/space-infix-ops">space-infix-ops</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              73:13
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Infix operators must be spaced.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/space-infix-ops">space-infix-ops</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              73:18
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Missing space before opening brace.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/space-before-blocks">space-before-blocks</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              74:16
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Infix operators must be spaced.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/space-infix-ops">space-infix-ops</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              75:14
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Infix operators must be spaced.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/space-infix-ops">space-infix-ops</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              75:20
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Infix operators must be spaced.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/space-infix-ops">space-infix-ops</a></td>
+      </tr><tr class="msg-danger"><td class="location-col">
+                              76:1
+                          </td>
+                          <td class="severity-col">Error</td>
+                          <td class="message-col">Line 76 exceeds the maximum line length of 100.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/max-len">max-len</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              76:176
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Missing space before opening brace.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/space-before-blocks">space-before-blocks</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              77:18
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Infix operators must be spaced.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/space-infix-ops">space-infix-ops</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              77:20
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Missing whitespace after semicolon.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/semi-spacing">semi-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              77:22
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Infix operators must be spaced.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/space-infix-ops">space-infix-ops</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              77:37
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Missing whitespace after semicolon.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/semi-spacing">semi-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              77:39
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Infix operators must be spaced.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/space-infix-ops">space-infix-ops</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              77:41
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Infix operators must be spaced.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/space-infix-ops">space-infix-ops</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              77:44
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Missing space before opening brace.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/space-before-blocks">space-before-blocks</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              78:30
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Infix operators must be spaced.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/space-infix-ops">space-infix-ops</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              78:54
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              78:70
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              85:14
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              86:30
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              86:37
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              89:31
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              89:38
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr></tbody>
+                  </table>
+                </td>
+              </tr><tr class="danger"><td>            <a class="toggle-link" href="javascript:;" onclick="toggleDetails(this)">/vagrant/org-testJSAssignments/gulpfile.js</a></td>
+              <td>1</td>
+              <td>9</td></tr><tr class="details-row hidden">
+                <td colspan="3">
+                  <table class="details-table">
+                    <tbody><tr class="msg-warning"><td class="location-col">
+                              11:28
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              14:33
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              14:47
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              19:35
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Missing semicolon.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/semi">semi</a></td>
+      </tr><tr class="msg-danger"><td class="location-col">
+                              22:7
+                          </td>
+                          <td class="severity-col">Error</td>
+                          <td class="message-col">&#x27;filesToMove&#x27; is assigned a value but never used.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/no-unused-vars">no-unused-vars</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              24:31
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              28:6
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Extra space after key &#x27;createMissingFolders&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/key-spacing">key-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              30:33
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Missing semicolon.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/semi">semi</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              34:34
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">A space is required after &#x27;,&#x27;.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/comma-spacing">comma-spacing</a></td>
+      </tr><tr class="msg-warning"><td class="location-col">
+                              35:17
+                          </td>
+                          <td class="severity-col">Warning</td>
+                          <td class="message-col">Missing semicolon.</td>
+                            <td class="rule-col"><a href="http://eslint.org/docs/rules/semi">semi</a></td>
+      </tr></tbody>
+                  </table>
+                </td>
+              </tr></tbody>
+      </table>
+
+  </div>
+</body>
+</html>
