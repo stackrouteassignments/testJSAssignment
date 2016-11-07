@@ -1,8 +1,8 @@
 const fs = require('fs');
 
-const countries = fs.readFile('data/countrymap.csv').toString().split(',');
+const countries = fs.readFile('datafiles/countrymap.csv').toString().split(',');
 
-const input = fs.createReadStream('data/Indicators.csv');
+const input = fs.createReadStream('datafiles/Indicators.csv');
 const outputFile_MF = 'output/maleFemale.json';
 const outputFile_TOT = 'output/total.json';
 const r1 = require('readline').createInterface({
