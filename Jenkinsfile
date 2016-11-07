@@ -22,6 +22,9 @@ node {
     stage 'Testing'
     sh "npm test"
   } finally {
+    stage 'Unlinking data files'
+    sh 'rm datafiles'
+    
     stage 'Creating Report Artifact'
     sh "mv htmlhint-output.html output/htmlhint-output.html"
     step([$class: 'ArtifactArchiver', artifacts: 'output/*.html', fingerprint: true])
